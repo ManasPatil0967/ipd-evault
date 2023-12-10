@@ -7,7 +7,7 @@ export default function Home() {
     <div className="h-screen flex flex-col bg-[#22c55e]">
       <nav className="bg-black flex items-center justify-between px-6 py-4">
         <div className="flex items-center">
-          <img alt="Vercel logo" className="w-8 h-8 mr-3" src="/placeholder.svg" />
+          <img alt="Vercel logo" className="w-8 h-8 mr-3 bg-white" src="/vercel.svg" />
           <h1 className="text-2xl font-bold text-white">DocVault</h1>
         </div>
         <div className="flex items-center space-x-4">
