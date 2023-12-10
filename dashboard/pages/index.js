@@ -11,10 +11,10 @@ export default function Home() {
           <h1 className="text-2xl font-bold text-white">DocVault</h1>
         </div>
         <div className="flex items-center space-x-4">
-          <a className="text-xl text-white" href="#">
+          <a className="text-xl text-white" href="/signup">
             Signup
           </a>
-          <a className="text-xl text-white" href="#">
+          <a className="text-xl text-white" href="/login">
             Login
           </a>
         </div>
