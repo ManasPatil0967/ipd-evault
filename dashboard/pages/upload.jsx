@@ -1,4 +1,3 @@
-import { decl } from "postcss";
 import Navbar from "./components/navbar";
 import { useRef, useState } from "react";
 
