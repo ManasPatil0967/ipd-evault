@@ -1,36 +1,45 @@
+import { decl } from "postcss";
 import Navbar from "./components/navbar";
-import { useState } from "react";
-import pinataSDK from "@pinata/sdk";
-import fs from "fs";
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/d7Qp6uvrhMe
- */
+import { useRef, useState } from "react";
+
 export default function Component() {
     const [docName, setDocName] = useState("");
     const [docId, setDocId] = useState("");
     const [docFile, setDocFile] = useState(null);
     const [hash, setHash] = useState("");
-    const pinata = new pinataSDK(
-        {
-            pinataJWTKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI4NDk3ZTg5OS0zMTAxLTQzYjctYTlmMi1kNzY2MmM5NjFmODYiLCJlbWFpbCI6Im1hbmFzcGF0aWwwOTY3QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImlkIjoiRlJBMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfSx7ImlkIjoiTllDMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiIyZTc2ODc3NGRmOGFlNGRlNjRmMCIsInNjb3BlZEtleVNlY3JldCI6ImUzMDFkZmQzMTY1MjUzZDNlZTI3NjBmZDYwMmZiNDZhZDdiNzNlODJjZTFlMjYyMGVlZjBkMWNlZjBkMWQyYzUiLCJpYXQiOjE3MDIyMjA0MzF9.PCNrzLu21TUxO9riDHWBXaOKIWj9Bty9jyOgYKFxqvk'
+
+    const [file, setFile] = useState(null);
+    const inputFile = useRef(null);
+    const [cid, setCid] = useState("");
+    const [uploading, setUploading] = useState(false);
+
+
+    const uploadFile = async (fileToUpload) => {
+        try {
+            setUploading(true);
+            const formData = new FormData();
+            formData.append("file", fileToUpload, { filename: docName});
+            console.log(formData);
+            const res = await fetch("/api/files", {
+                method: "POST",
+                body: formData,
+            });
+            const ipfsHash = await res.text();
+            console.log(ipfsHash);
+            setCid(ipfsHash);
+            setUploading(false);
+        } catch (e) {
+            console.log(e);
+            setUploading(false);
+            alert("Trouble uploading file");
         }
-    );
+    };
 
-    const handleUpload = async (e) => {
+    const handleUpload = (e) => {
         e.preventDefault();
-        const doc = fs.createReadStream(docFile);
-        const metadata = {
-            name: docName,
-            keyvalues: {
-                docId: docId,
-            },
-        };
-        const pinataResponse = await pinata.pinFileToIPFS(doc,  {pinataMetadata: metadata});
-        console.log(pinataResponse.IpfsHash);
-        setHash(pinataResponse.IpfsHash);
-    }
-
+        setFile(e.target.files[0]);
+        uploadFile(e.target.files[0]);
+    };
   return (
     <div className="h-screen flex flex-col bg-[#22c55e]">
       <Navbar />
@@ -73,18 +82,24 @@ export default function Component() {
               id="doc-file"
               required
               type="file"
-              onChange={(e) => setDocFile(e.target.value)}
+              ref={inputFile}
+              onChange= {handleUpload}
+              style={{ display: "none" }}
             />
           </div>
           <div className="flex items-center justify-between">
             <button
               className="bg-[#22c55e] hover:bg-[#16a34a] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              type="submit" onClick={handleUpload}
+              type="submit" onClick={() => inputFile.current.click()} disabled={uploading}
             >
               Upload
             </button>
           </div>
         </form>
+      <div className="flex flex-col items-center justify-center bg-black text-white">
+        {uploading && <p>Uploading...</p>}
+        {cid && <p>Uploaded to IPFS with CID: {cid}</p>}
+      </div>
       </div>
     </div>
   )
