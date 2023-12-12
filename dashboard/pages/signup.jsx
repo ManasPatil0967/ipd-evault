@@ -3,7 +3,7 @@
  * @see https://v0.dev/t/xE1C35B5CAE
  */
 import { Button } from "@/components/ui/button"
-import { createUser, onAuthStateChanged } from "./utils/user"
+import { createUser, onAuthStateChanged, loginUser } from "@/utils/user"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/router"
 
