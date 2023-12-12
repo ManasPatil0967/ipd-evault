@@ -23,8 +23,8 @@ export default function Home() {
       <div className="flex-grow flex flex-col items-center justify-center bg-black text-white">
         <h2 className="text-5xl font-bold">Welcome to DocVault</h2>
         <p className="text-xl mt-6 px-4 text-center">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam non est id velit porttitor malesuada. Cras
-          lacinia risus at dui pellentesque, sed finibus lorem condimentum.
+            DocVault is a decentralized application that allows you to store and share your documents
+            securely.
         </p>
       </div>
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">

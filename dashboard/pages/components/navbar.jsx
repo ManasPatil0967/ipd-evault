@@ -1,4 +1,7 @@
 export default function Navbar() {
+    const logout = () => {
+        
+    }
     return (
       <nav className="bg-black flex items-center justify-between px-6 py-4">
         <div className="flex items-center">
@@ -15,6 +18,9 @@ export default function Navbar() {
           <a className="text-xl text-white" href="/orgs">
             Organizations
           </a>
+            <button className="text-xl text-white" onClick={logout}>
+                Logout
+            </button>
         </div>
       </nav>
     )
