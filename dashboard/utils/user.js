@@ -3,7 +3,7 @@ import abi from "./abi.json";
 
 const contractAddress = "0xd9145CCE52D386f254917e481eB44e9943F39138";
 
-const provider = new ethers.providers.JsonRpcProvider();
+const provider = new ethers.providers.Web3Provider(window.ethereum);
 const contract = new ethers.Contract(contractAddress, abi, provider);
 
 const createUser = async (name, age, income, state) => {
