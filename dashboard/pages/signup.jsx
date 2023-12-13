@@ -3,7 +3,7 @@
  * @see https://v0.dev/t/xE1C35B5CAE
  */
 import { Button } from "@/components/ui/button"
-import { createUser, onAuthStateChanged, loginUser } from "@/utils/user"
+import { connectWallet, getCurrentWalletConnected, createUser } from "@/utils/user"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/router"
 
@@ -12,32 +12,56 @@ export default function Component() {
     const [state, setState] = useState("")
     const [age, setAge] = useState("")
     const [income, setIncome] = useState("")
+    const [wallet, setWallet] = useState(null);
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
     const router = useRouter()
 
-    useEffect(() => {
-        onAuthStateChanged (async (user) => { 
+    const handleConnect = async () => {
+        try {
+            const user = await connectWallet();
+            setWallet(user.wallet)
             setUser(user)
-            setLoading(false)
-            if (user) {
-                router.push("/dashboard")
-            }
-        })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    function addWalletListener() {
+      if (window.ethereum) {
+        window.ethereum.on("accountsChanged", (accounts) => {
+          if (accounts.length > 0) {
+            setWallet(accounts[0]);
+          } else {
+            setWallet("");
+          }
+        });
+      } else {
+        alert("Install Metamask");
+      }
+    }
+    useEffect(() => {
+      async function fetchWallet() {
+        try {
+          const wallet = await getCurrentWalletConnected()
+          if (wallet) {
+            console.log(wallet)
+            setWallet(wallet)
+          }
+          setLoading(false)
+        } catch (error) {
+          console.log(error)
+        }
+      }
+      fetchWallet();
+      addWalletListener();
     }, [])
-
-    if (loading) {
-        return <div>Loading...</div>
-    }
-
-    if (user) {
-        return <div>Logged in as {user.email}</div>
-    }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
-            await createUser(name, state, age, income)
+            await createUser(wallet, name, income, age, state)
+            router.push("/home")
         } catch (error) {
             console.log(error)
         }
@@ -65,6 +89,7 @@ export default function Component() {
           <div className="w-96 rounded-lg bg-gray-800 p-8">
             <h3 className="mb-6 text-3xl font-bold text-white">Sign up</h3>
             <div className="mb-4">
+              <button className="w-full bg-blue-600 py-2 text-white hover:bg-blue-700" onClick={handleConnect}>Connect Wallet</button>
               <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="name">
                 Enter your name
               </label>

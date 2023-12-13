@@ -1,10 +1,11 @@
 import Navbar from "./components/navbar"
-
+import { getUser } from "@/utils/user"
 /**
  * v0 by Vercel.
  * @see https://v0.dev/t/XBxQVC6G4Ln
  */
 export default function Component() {
+  const user = getUser();
   return (
     <div className="h-screen flex flex-col bg-[#22c55e]">
       <Navbar />
@@ -12,6 +13,7 @@ export default function Component() {
       <div className="flex-grow flex flex-col items-center justify-center bg-black text-white">
         <UserIcon className="w-16 h-16 mb-4" />
         <h2 className="text-3xl font-bold">Welcome, User</h2>
+        <h3 className="mt-2 text-xl">{user.name}</h3>
         <p className="mt-2 text-xl">Here's your dashboard</p>
       </div>
     </div>
