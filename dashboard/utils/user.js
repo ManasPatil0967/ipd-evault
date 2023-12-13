@@ -4,7 +4,7 @@ import abi from "./abi.json";
 const alchemy = "wss://polygon-mumbai.g.alchemy.com/v2/4p4dIgkSccNSIOpgg_8jnt8wGRsCBgJa";
 const web3 = createAlchemyWeb3(alchemy);
 
-const contractAddress = "0x96C7641172A7d05D35da4d15AD6C65772027E55F";
+const contractAddress = "0xA4F6E7d7a8A2d6CDE062359c0f0e6A36ad0DD2cE";
 const contract = new web3.eth.Contract(abi, contractAddress);
 
 export const connectWallet = async () => {
@@ -86,7 +86,25 @@ export const createUser = async (address, name, income, age, state) => {
 
 export const getUser = async (address) => {
     try {
-        const result = await contract.methods.getUser(address).call();
+        const user = await contract.methods.getUser(address).call();
+        return {
+            success: true,
+            user: user,
+        };
+    } catch (error) {
+        return {
+            success: false,
+            error: error.message,
+        };
+    }
+}
+
+
+export const isAuthenticated = async (address) => {
+    try {
+        console.log(address);
+        console.log("isAuthenticated");
+        const result = await contract.methods.isAuth(address).call();
         return {
         success: true,
         result: result,
@@ -95,6 +113,52 @@ export const getUser = async (address) => {
         return {
         success: false,
         error: error.message,
+        };
+    }
+}
+
+export const login = async (address) => {
+    const transactionParameters = {
+        to: contractAddress,
+        from: address,
+        data: contract.methods.login().encodeABI(),
+    };
+    try {
+        const txHash = await window.ethereum.request({
+        method: "eth_sendTransaction",
+        params: [transactionParameters],
+        });
+        return {
+        success: true,
+        txHash: txHash,
+        };
+    } catch (error) {
+        return {
+        success: false,
+        error: error.message,
+        };
+    }
+}
+
+export const logout = async (address) => {
+    const transactionParameters = {
+        to: contractAddress,
+        from: address,
+        data: contract.methods.logout().encodeABI(),
+    };
+    try {
+        const txHash = await window.ethereum.request({
+            method: "eth_sendTransaction",
+            params: [transactionParameters],
+        });
+        return {
+            success: true,
+            txHash: txHash,
+        };
+    } catch (error) {
+        return {
+            success: false,
+            error: error.message,
         };
     }
 }

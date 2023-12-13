@@ -3,8 +3,59 @@
  * @see https://v0.dev/t/9ZDprezIx5f
  */
 import { Button } from "@/components/ui/button"
+import { getCurrentWalletConnected, isAuthenticated, login } from "@/utils/user"
+import { useRouter } from "next/router"
+import { useState, useEffect } from "react"
 
 export default function Component() {
+  const router = useRouter()
+  const [wallet, setWallet] = useState(null);
+  const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  function addWalletListener() {
+    if (window.ethereum) {
+      window.ethereum.on("accountsChanged", (accounts) => {
+        if (accounts.length > 0) {
+          setWallet(accounts[0]);
+        } else {
+          setWallet("");
+        }
+      });
+    } else {
+      alert("Install Metamask");
+    }
+  }
+  useEffect(() => {
+    async function fetchWallet() {
+      try {
+        const wallet = await getCurrentWalletConnected()
+        if (wallet) {
+          console.log("line 49 signup.jsx: ", wallet)
+          setWallet(wallet)
+        }
+        setLoading(false)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    fetchWallet();
+    addWalletListener();
+  }, [])
+
+  const handleLogin = async () => {
+    try {
+      const user = await login(wallet)
+      if (user) {
+        console.log("line 35 login.jsx: ", user)
+        setUser(user)
+        router.push("/home")
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <div className="flex h-screen bg-[#22c55e]">
       <div className="flex w-1/2 flex-col items-center justify-center text-white">
@@ -29,31 +80,7 @@ export default function Component() {
           </div>
           <div className="w-96 rounded-lg bg-gray-800 p-8">
             <h3 className="mb-6 text-3xl font-bold text-white">Log in</h3>
-            <div className="mb-4">
-              <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="email">
-                Enter your email address
-              </label>
-              <input
-                className="w-full rounded-md border-gray-600 bg-gray-700 px-4 py-2 text-white focus:border-green-500 focus:ring-green-500"
-                id="email"
-                placeholder="example@example.com"
-                type="email"
-              />
-            </div>
-            <div className="mb-6">
-              <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="password">
-                Password
-              </label>
-              <input
-                className="w-full rounded-md border-gray-600 bg-gray-700 px-4 py-2 text-white focus:border-green-500 focus:ring-green-500"
-                id="password"
-                type="password"
-              />
-            </div>
-            <Button className="w-full bg-green-600 py-2 text-white hover:bg-green-700">Log in</Button>
-            <a className="mt-4 block text-center text-sm text-gray-400 hover:text-gray-300" href="#">
-              Forgot your password?
-            </a>
+            <button className="w-full bg-green-600 py-2 text-white hover:bg-green-700" onClick={handleLogin}>Log in using Metamask</button>
           </div>
         </div>
       </div>

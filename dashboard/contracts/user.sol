@@ -33,24 +33,20 @@ contract user {
         authenticated[msg.sender] = true;
         emit UserLoggedIn(msg.sender);
     }
-
+    
     function logout() public onlyAuthenticated {
         require(authenticated[msg.sender], "User not authenticated");
         authenticated[msg.sender] = false;
         emit UserLoggedOut(msg.sender);
     }
 
-    function getUser(address user) public view returns (string memory Name, string memory Age, string memory Income, string memory State) {
-        User memory u = users[user];
+    function getUser(address _user) public view returns (string memory Name, string memory Age, string memory Income, string memory State) {
+        User memory u = users[_user];
         return (u.Name, u.Age, u.Income, u.State);
     }
 
-    function onAuthStateChanged(bool state) public {
-        if (state) {
-            emit UserLoggedIn(msg.sender);
-        } else {
-            emit UserLoggedOut(msg.sender);
-        }
+    function isAuth(address _user) public view returns (bool) {
+        return authenticated[_user];
     }
 
 }

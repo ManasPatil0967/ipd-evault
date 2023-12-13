@@ -1,6 +1,57 @@
+import React from 'react'
+import { useRouter } from "next/router"
+import { useState, useEffect } from "react"
+import { logout, getCurrentWalletConnected } from '@/utils/user'
+
 export default function Navbar() {
-    const logout = () => {
-        
+    const router = useRouter();
+    const [wallet, setWallet] = useState(null);
+    const [user, setUser] = useState(null)
+    const [loading, setLoading] = useState(true)
+
+    function addWalletListener() {
+      if (window.ethereum) {
+        window.ethereum.on("accountsChanged", (accounts) => {
+          if (accounts.length > 0) {
+            setWallet(accounts[0]);
+          } else {
+            setWallet("");
+          }
+        });
+      } else {
+        alert("Install Metamask");
+      }
+    }
+
+    useEffect(() => {
+      async function fetchWallet() {
+        try {
+          const wallet = await getCurrentWalletConnected()
+          if (wallet) {
+            console.log("line 49 signup.jsx: ", wallet)
+            setWallet(wallet)
+          }
+          setLoading(false)
+        } catch (error) {
+          console.log(error)
+        }
+      }
+      fetchWallet();
+      addWalletListener();
+    }
+    , [])
+
+    const handleLogout = async () => {
+      try {
+        const user = await logout(wallet)
+        if (user) {
+          console.log("line 35 home.jsx: ", user)
+          setUser(user)
+          router.push("/")
+        }
+      } catch (error) {
+        console.log(error)
+      }
     }
     return (
       <nav className="bg-black flex items-center justify-between px-6 py-4">
@@ -18,7 +69,7 @@ export default function Navbar() {
           <a className="text-xl text-white" href="/orgs">
             Organizations
           </a>
-            <button className="text-xl text-white" onClick={logout}>
+            <button className="text-xl text-white" onClick={handleLogout}>
                 Logout
             </button>
         </div>

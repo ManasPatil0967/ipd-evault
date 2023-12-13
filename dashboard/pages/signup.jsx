@@ -3,7 +3,7 @@
  * @see https://v0.dev/t/xE1C35B5CAE
  */
 import { Button } from "@/components/ui/button"
-import { connectWallet, getCurrentWalletConnected, createUser } from "@/utils/user"
+import { connectWallet, getCurrentWalletConnected, createUser, isAuthenticated } from "@/utils/user"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/router"
 
@@ -20,6 +20,7 @@ export default function Component() {
     const handleConnect = async () => {
         try {
             const user = await connectWallet();
+            console.log(user)
             setWallet(user.wallet)
             setUser(user)
         } catch (error) {
@@ -45,7 +46,7 @@ export default function Component() {
         try {
           const wallet = await getCurrentWalletConnected()
           if (wallet) {
-            console.log(wallet)
+            console.log("line 49 signup.jsx: ", wallet)
             setWallet(wallet)
           }
           setLoading(false)
@@ -55,6 +56,26 @@ export default function Component() {
       }
       fetchWallet();
       addWalletListener();
+    }, [])
+
+    useEffect(() => {
+      if(wallet){
+        async function fetchUser() {
+        try {
+          const user = await isAuthenticated(wallet)
+          if (user) {
+            console.log("line 49 signup.jsx: ", user)
+            setUser(user)
+            router.push("/home")
+          }
+          setLoading(false)
+        } catch (error) {
+          console.log(error)
+        }
+      }
+      fetchUser();
+    }
+      
     }, [])
 
     const handleSubmit = async (e) => {
