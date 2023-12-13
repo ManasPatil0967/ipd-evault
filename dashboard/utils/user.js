@@ -2,11 +2,10 @@ import { ethers } from "ethers";
 import abi from "./abi.json";
 
 const contractAddress = "0xd9145CCE52D386f254917e481eB44e9943F39138";
-let provider, contract;
-if (typeof window.ethereum !== 'undefined') {
-    provider = new ethers.providers.Web3Provider(window.ethereum);
-    contract = new ethers.Contract(contractAddress, abi, provider);
-}
+
+const provider = new ethers.providers.JsonRpcProvider("https://polygon-mumbai.g.alchemy.com/v2/4p4dIgkSccNSIOpgg_8jnt8wGRsCBgJa");
+const contract = new ethers.Contract(contractAddress, abi, provider);
+
 const createUser = async (name, age, income, state) => {
     const signer = provider.getSigner();
     const contractWithSigner = contract.connect(signer);

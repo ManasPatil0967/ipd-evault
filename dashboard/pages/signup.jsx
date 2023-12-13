@@ -112,7 +112,7 @@ export default function Component() {
                 onChange={(e) => setIncome(e.target.value)}
               />
             </div>
-            <Button className="w-full bg-green-600 py-2 text-white hover:bg-green-700" onClick="{handleSubmit}">Sign Up</Button>
+            <button className="w-full bg-green-600 py-2 text-white hover:bg-green-700" onClick={handleSubmit}>Sign Up</button>
             <a className="mt-4 block text-center text-sm text-gray-400 hover:text-gray-300" href="#">
               Already have an account? Log in
             </a>
