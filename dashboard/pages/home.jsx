@@ -9,7 +9,7 @@ import { useState, useEffect } from "react"
 export default function Component() {
   const router = useRouter();
   const [wallet, setWallet] = useState(null);
-  const [user, setUser] = useState({})
+  const [user, setUser] = useState(null)
 
   function addWalletListener() {
     if (window.ethereum) {
@@ -31,6 +31,14 @@ export default function Component() {
         if (wallet) {
           console.log("line 17 home.jsx: ", wallet)
           setWallet(wallet)
+          const user = await getUser(wallet)
+          if (user) {
+            setUser(user)
+            console.log("line 35 home.jsx: ", user)
+          }
+          else  {
+            router.push("/signup")
+          }
         }
       } catch (error) {
         console.log(error)
@@ -70,7 +78,7 @@ export default function Component() {
       <div className="border-t border-white" />
       <div className="flex-grow flex flex-col items-center justify-center bg-black text-white">
         <UserIcon className="w-16 h-16 mb-4" />
-        <h2 className="text-3xl font-bold">Welcome, {user.user[0]}</h2>
+        {user && <h2 className="text-3xl font-bold">Welcome, {user.user[0]}</h2>}
         <p className="mt-2 text-xl">Here's your dashboard</p>
       </div>
     </div>
