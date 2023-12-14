@@ -66,6 +66,9 @@ export default function Navbar() {
           <a className="text-xl text-white" href="/upload">
             Upload
           </a>
+          <a className="text-xl text-white" href="/schemes">
+            Schemes
+          </a>
           <a className="text-xl text-white" href="/orgs">
             Organizations
           </a>
