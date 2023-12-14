@@ -22,7 +22,7 @@ export default function Component() {
             const user = await connectWallet();
             console.log(user)
             setWallet(user.wallet)
-            setUser(user)
+            //setUser(user)
         } catch (error) {
             console.log(error)
         }
