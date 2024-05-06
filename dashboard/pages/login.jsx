@@ -45,10 +45,8 @@ export default function Component() {
 
   const handleLogin = async () => {
     try {
-      const user = await login(wallet)
-      if (user) {
-        console.log("line 35 login.jsx: ", user)
-        setUser(user)
+      // const user = await login(wallet)
+      if (wallet) {
         router.push("/home")
       }
     } catch (error) {

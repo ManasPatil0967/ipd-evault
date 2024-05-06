@@ -1,7 +1,7 @@
 import React from 'react'
 import { useRouter } from "next/router"
 import { useState, useEffect } from "react"
-import { logout, getCurrentWalletConnected } from '@/utils/user'
+import { getCurrentWalletConnected } from '@/utils/user'
 
 export default function Navbar() {
     const router = useRouter();
@@ -43,12 +43,10 @@ export default function Navbar() {
 
     const handleLogout = async () => {
       try {
-        const user = await logout(wallet)
-        if (user) {
-          console.log("line 35 home.jsx: ", user)
-          setUser(user)
-          router.push("/")
-        }
+        setWallet(null);
+        setUser(null);
+        localStorage.clear();
+        router.push("/");
       } catch (error) {
         console.log(error)
       }

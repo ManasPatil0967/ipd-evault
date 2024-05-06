@@ -13,7 +13,6 @@ export default function Component() {
     const [age, setAge] = useState("")
     const [income, setIncome] = useState("")
     const [wallet, setWallet] = useState(null);
-    const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
     const router = useRouter()
 
@@ -56,26 +55,6 @@ export default function Component() {
       }
       fetchWallet();
       addWalletListener();
-    }, [])
-
-    useEffect(() => {
-      if(wallet){
-        async function fetchUser() {
-        try {
-          const user = await isAuthenticated(wallet)
-          if (user) {
-            console.log("line 49 signup.jsx: ", user)
-            setUser(user)
-            router.push("/home")
-          }
-          setLoading(false)
-        } catch (error) {
-          console.log(error)
-        }
-      }
-      fetchUser();
-    }
-      
     }, [])
 
     const handleSubmit = async (e) => {

@@ -2,10 +2,7 @@ import Navbar from "./components/navbar"
 import { getUser, isAuthenticated, getCurrentWalletConnected } from "@/utils/user"
 import { useRouter } from "next/router"
 import { useState, useEffect } from "react"
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/XBxQVC6G4Ln
- */
+
 export default function Component() {
   const router = useRouter();
   const [wallet, setWallet] = useState(null);

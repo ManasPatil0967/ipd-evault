@@ -4,12 +4,7 @@ import path from 'path';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import { getCurrentWalletConnected, getUser } from '@/utils/user';
-import { data } from "autoprefixer";
-import { match } from "assert";
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/RdkgeuZHnbp
- */
+
 export async function getStaticProps() {
     const schemesCsvPath = path.join(process.cwd(), 'data', '../schemes.csv');
     const schemes = fs.readFileSync(schemesCsvPath, 'utf8');
@@ -76,7 +71,7 @@ export default function Component({ schemes}) {
                         const user = await getUser(wallet);
                         if (user) {
                             setUser(user);
-                            console.log('line 35 home.jsx: ', user);
+                            console.log('line 79 schemes.jsx: ', user);
                         }
                         else {
                             router.push('/signup');
@@ -91,11 +86,11 @@ export default function Component({ schemes}) {
         }
     }, []);
     if(user) {
-        console.log(user.user[3]);
-        console.log(Number(user.user[1]));
+        // console.log(user.user[3]);
+        // console.log(Number(user.user[1]));
         for(let i = 0; i < schemesArray.length; i++) {
             if(schemesArray[i].split(',')[3] === user.user[3] || schemesArray[i].split(',')[2] === 'NA' || Number(schemesArray[i].split(',')[2]) <= Number(user.user[1])) {
-                console.log(schemesArray[i]);
+                // console.log(schemesArray[i]);
                 matchingSchemes.push(schemesArray[i].split(',')[1]);
             }
         }
