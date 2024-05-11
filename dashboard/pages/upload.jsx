@@ -1,10 +1,12 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Navbar from "./components/navbar";
 import Tesseract from 'tesseract.js';
 import InvalidFileModal from './components/InvalidFileModal';
+import { getCurrentWalletConnected, getUser } from "@/utils/user";
 
 export default function Component() {
     const [user, setUser] = useState({});
+    const [wallet, setWallet] = useState("");
     const [docName, setDocName] = useState("");
     const [docId, setDocId] = useState("");
     const [file, setFile] = useState(null);
