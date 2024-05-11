@@ -74,7 +74,7 @@ export default function Component() {
     const validateFile = async (file) => {
         const { data: { text } } = await Tesseract.recognize(file);
         console.log(text);
-        if (text.includes(docName) || text.includes(docId)  || text.includes(docName.toLowerCase() || text.includes(docId.toLowerCase())) && text.includes(user.user[0]).toLowerCase()){
+        if (text.includes(docName) || text.includes(docId)  || text.includes(docName.toLowerCase() || text.includes(docId.toLowerCase())) && (text.includes(user.user[0]).toLowerCase() || text.includes(user.user[0]))){
             console.log("Valid file");
             uploadFile(file);
         } else {
