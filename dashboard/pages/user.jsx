@@ -98,7 +98,7 @@ export default function Component() {
         <p className="mt-2 text-xl">Here's your dashboard</p>
         <div className="w-full p-6">
           
-          <form onSubmit={handleEditSubmit} className="flex flex-col space-y-4">
+          <form onSubmit={handleEditSubmit} className="flex flex-col space-y-4 text-black">
             <input
               type="text"
               placeholder="Name"
