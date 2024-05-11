@@ -4,6 +4,7 @@ import Tesseract from 'tesseract.js';
 import InvalidFileModal from './components/InvalidFileModal';
 
 export default function Component() {
+    const [user, setUser] = useState({});
     const [docName, setDocName] = useState("");
     const [docId, setDocId] = useState("");
     const [file, setFile] = useState(null);
@@ -11,7 +12,42 @@ export default function Component() {
     const [uploading, setUploading] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const inputFile = useRef(null);
-
+    function addWalletListener() {
+      if (window.ethereum) {
+        window.ethereum.on("accountsChanged", (accounts) => {
+          if (accounts.length > 0) {
+            setWallet(accounts[0]);
+          } else {
+            setWallet("");
+          }
+        });
+      } else {
+        alert("Install Metamask");
+      }
+    }
+    useEffect(() => {
+      async function fetchWallet() {
+        try {
+          const wallet = await getCurrentWalletConnected()
+          if (wallet) {
+            console.log("line 17 home.jsx: ", wallet)
+            setWallet(wallet)
+            const user = await getUser(wallet)
+            if (user) {
+              setUser(user)
+              console.log("line 35 home.jsx: ", user)
+            }
+            else  {
+              router.push("/signup")
+            }
+          }
+        } catch (error) {
+          console.log(error)
+        }
+      }
+      fetchWallet();
+      addWalletListener();
+    }, [])
     const uploadFile = async (fileToUpload) => {
         try {
             setUploading(true);
@@ -36,7 +72,7 @@ export default function Component() {
     const validateFile = async (file) => {
         const { data: { text } } = await Tesseract.recognize(file);
         console.log(text);
-        if (text.includes(docName) || text.includes(docId) || text.includes(docName.toLowerCase() || text.includes(docId.toLowerCase()))){
+        if (text.includes(docName) || text.includes(docId)  || text.includes(docName.toLowerCase() || text.includes(docId.toLowerCase())) && text.includes(user.user[0]).toLowerCase()){
             console.log("Valid file");
             uploadFile(file);
         } else {
